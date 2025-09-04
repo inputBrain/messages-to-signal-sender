@@ -1,0 +1,14 @@
+{
+  "name": "smssender",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "css:build": "tailwindcss -i ./wwwroot/css/site.css -o ./wwwroot/css/styles.css",
+    "css:watch": "tailwindcss -i ./wwwroot/css/site.css -o ./wwwroot/css/styles.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.12",
+    "tailwindcss": "^4.1.12"
+  }
+}
