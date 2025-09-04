@@ -18,6 +18,7 @@ public class MessageController : Controller
 
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> SendMessage(MessageViewModel vm)
     {
         _logger.LogInformation("Sending message");
@@ -25,6 +26,9 @@ public class MessageController : Controller
         
         var message = await _messageRepository.CreateModel(vm.Name ?? "", vm.Message, DateTimeOffset.UtcNow);
         _logger.LogInformation("Message saved in the DataBase | Message: {id}, {Message}", message.Id, message.Message);
+        
+        
+        TempData["MessageSent"] = true;
         
         return RedirectToAction("Index", "Home");
     }

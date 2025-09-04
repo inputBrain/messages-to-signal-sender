@@ -1,6 +1,7 @@
 ﻿@model MessageViewModel
 @{
     ViewData["Title"] = "Message Page";
+    var messageSent = TempData["MessageSent"] as bool? ?? false;
 }
 
 <div class="min-h-screen flex items-center justify-center bg-slate-50 px-4 pb-12">
@@ -46,6 +47,82 @@
         </form>
     </div>
 </div>
+
+
+
+@if (messageSent)
+{
+    <div id="sentModal"
+         class="fixed inset-0 z-50 flex items-center justify-center px-4"
+         role="dialog" aria-modal="true" aria-labelledby="sentTitle">
+
+        <div class="absolute inset-0 bg-black/40" aria-hidden="true"></div>
+
+        <div class="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg">
+            <div class="flex items-start gap-3">
+
+                <div class="shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         class="h-8 w-8">
+                        <circle cx="12" cy="12" r="10" class="fill-emerald-100"></circle>
+                        <path d="M8.5 12.5l2.5 2.5 4.5-5.5"
+                              class="stroke-emerald-600" stroke-width="2" fill="none"
+                              stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+
+                <div class="flex-1">
+                    <h2 id="sentTitle" class="text-base font-semibold">
+                        Message sent successfully
+                    </h2>
+                    <p class="mt-1 text-sm text-slate-600">
+                        Thank you! We’ll get back to you soon.
+                    </p>
+                </div>
+
+                <button type="button" id="sentCloseBtn"
+                        class="ml-2 rounded-md p-1 text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                        aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                         viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 
+                                 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 
+                                 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 
+                                 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const modal = document.getElementById('sentModal');
+            const closeBtn = document.getElementById('sentCloseBtn');
+
+            const close = () => {
+                if (!modal) return;
+                modal.style.opacity = '0';
+                modal.style.pointerEvents = 'none';
+                setTimeout(() => modal.remove(), 5000);
+            };
+
+            setTimeout(close, 5000);
+
+            closeBtn?.addEventListener('click', close);
+
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) close();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') close();
+            });
+        })();
+    </script>
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
