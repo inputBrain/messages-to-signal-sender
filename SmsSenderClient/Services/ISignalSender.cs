@@ -2,5 +2,5 @@
 
 public interface ISignalSender
 {
-    Task SendTextAsync(string to, string text, CancellationToken ct = default);
+    Task SendTextAsync(string[] to, string text, CancellationToken ct = default);
 }

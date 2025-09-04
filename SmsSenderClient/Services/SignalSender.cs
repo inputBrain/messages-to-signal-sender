@@ -15,13 +15,13 @@ public sealed class SignalSender : ISignalSender
         _http.BaseAddress = new Uri(_cfg.BaseUrl.TrimEnd('/') + "/");
     }
 
-    public async Task SendTextAsync(string to, string text, CancellationToken ct = default)
+    public async Task SendTextAsync(string[] to, string text, CancellationToken ct = default)
     {
         var payload = new
         {
             message = text,
             number = _cfg.SendMessageFrom,
-            recipients = new[] { to }
+            recipients = to
         };
 
         using var res = await _http.PostAsJsonAsync("v2/send", payload, ct);

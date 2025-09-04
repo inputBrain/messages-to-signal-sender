@@ -38,7 +38,7 @@ public class MessageController : Controller
         var text = $"-=WEBSITE MESSAGE=-\n\nName: {message.Username}\n\nMessage:\n{message.Message}";
         try
         {
-            await _signal.SendTextAsync(_signalSettings.SendMessageFrom, text, cancellationToken);
+            await _signal.SendTextAsync(_signalSettings.SendMessageTo, text, cancellationToken);
         }
         catch (Exception ex)
         {
