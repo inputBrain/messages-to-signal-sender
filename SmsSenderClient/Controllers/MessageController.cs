@@ -23,6 +23,9 @@ public class MessageController : Controller
         _logger.LogInformation("Sending message");
         _logger.LogInformation("Name: {VmName} | Message: {VmMessage}", vm.Name, vm.Message);
         
+        var message = await _messageRepository.CreateModel(vm.Name ?? "", vm.Message, DateTimeOffset.UtcNow);
+        _logger.LogInformation("Message saved in the DataBase | Message: {id}, {Message}", message.Id, message.Message);
+        
         return RedirectToAction("Index", "Home");
     }
 }
