@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using SmsSenderClient.Configs;
 using SmsSenderClient.Database;
 using SmsSenderClient.Database.Message;
+using SmsSenderClient.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,9 @@ builder.Services.AddDbContext<PostgreSqlContext>(
 );
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<SignalSettings>(builder.Configuration.GetSection("Signal"));
+builder.Services.AddHttpClient<ISignalSender, SignalSender>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 
