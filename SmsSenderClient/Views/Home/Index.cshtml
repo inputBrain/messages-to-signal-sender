@@ -8,7 +8,8 @@
     <div class="w-full max-w-md">
         <h1 class="text-2xl font-semibold tracking-tight mb-4 text-center">Send us a message</h1>
 
-        <form asp-controller="Message"
+        <form id="sendForm"
+              asp-controller="Message"
               asp-action="SendMessage"
               method="post"
               class="space-y-4 bg-white/70 backdrop-blur rounded-xl p-4 shadow-sm"
@@ -40,7 +41,7 @@
                 </div>
             </div>
 
-            <button type="submit"
+            <button id="sendBtn" type="submit"
                     class="w-full rounded-lg bg-sky-600 px-4 py-2.5 text-white font-medium active:scale-[0.99] hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
                 Send
             </button>
@@ -126,19 +127,69 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        (function () {
+    
+    
+    
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
             const ta = document.querySelector('textarea[name="Message"]');
             const counter = document.getElementById('msgCounter');
-            if (!ta || !counter) return;
+            if (ta && counter) {
+                const update = () => counter.textContent = `${ta.value.length || 0} / 500`;
+                ta.addEventListener('input', update, { passive: true });
+                update();
+            }
 
-            const update = () => {
-                const len = ta.value.length || 0;
-                counter.textContent = `${len} / 500`;
-            };
 
-            ta.addEventListener('input', update, { passive: true });
-            update();
-        })();
+            const form = document.getElementById('sendForm');
+            const btn  = document.getElementById('sendBtn');
+            if (!form || !btn) return;
+
+            const baseLabel = btn.textContent.trim();
+            const frames = ["Sending", "Sending .", "Sending . .", "Sending . . ."];
+            let i = 0, timer = null, locked = false;
+
+            function startLoading() {
+                locked = true;
+                btn.disabled = true;
+                btn.setAttribute('aria-disabled', 'true');
+                btn.setAttribute('aria-busy', 'true');
+                btn.classList.add('opacity-60', 'cursor-not-allowed');
+
+                btn.textContent = frames[0];
+                i = 0;
+                timer = setInterval(() => {
+                    i = (i + 1) % frames.length;
+                    btn.textContent = frames[i];
+                }, 300);
+            }
+
+            function stopLoading() {
+                if (timer) clearInterval(timer);
+                btn.textContent = baseLabel;
+                btn.disabled = false;
+                btn.removeAttribute('aria-disabled');
+                btn.removeAttribute('aria-busy');
+                btn.classList.remove('opacity-60', 'cursor-not-allowed');
+                locked = false;
+            }
+
+            function isValid() {
+                if (typeof $ === 'function' && typeof $.fn.valid === 'function') {
+                    return $(form).valid();
+                }
+                return form.checkValidity ? form.checkValidity() : true;
+            }
+
+            form.addEventListener('submit', function (e) {
+                if (!isValid()) { stopLoading(); return; }
+                if (locked) { e.preventDefault(); return; }
+                startLoading();
+            });
+
+            window.addEventListener('pageshow', function () {
+                if (locked) stopLoading();
+            });
+        });
     </script>
 }
