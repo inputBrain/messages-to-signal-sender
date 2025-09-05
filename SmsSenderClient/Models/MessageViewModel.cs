@@ -10,4 +10,8 @@ public class MessageViewModel
     [MaxLength(500, ErrorMessage = "The message cannot exceed 500 characters.")]
     [Required(ErrorMessage = "The message field is required.")]
     public string Message { get; set; }
+    
+    
+    [Display(Name = "Attachment")]
+    public IFormFile? Attachment { get; set; }
 }

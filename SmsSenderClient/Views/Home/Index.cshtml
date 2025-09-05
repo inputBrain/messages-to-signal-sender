@@ -12,6 +12,7 @@
               asp-controller="Message"
               asp-action="SendMessage"
               method="post"
+              enctype="multipart/form-data"
               class="space-y-4 bg-white/70 backdrop-blur rounded-xl p-4 shadow-sm"
               novalidate>
             @Html.AntiForgeryToken()
@@ -40,9 +41,36 @@
                     <span id="msgCounter" class="text-xs text-slate-500">0 / 500</span>
                 </div>
             </div>
+            
+            <div class="flex flex-col">
+                <label class="mb-1 text-sm font-medium">Attach a photo (optional)</label>
 
+                <label for="attachment"
+                       class="flex items-center justify-between gap-2 rounded-lg border border-dashed border-slate-300 px-3 py-2 cursor-pointer hover:bg-slate-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M16.5 6.75v7.25a4.75 4.75 0 1 1-9.5 0V7.5a3 3 0 1 1 6 0v6.25a1.25 1.25 0 1 1-2.5 0V8.25h-1.5V13.5a2.75 2.75 0 1 0 5.5 0V7.5a4.5 4.5 0 1 0-9 0v6.5a6.25 6.25 0 1 0 12.5 0V6.75h-1.5z"/>
+                    </svg>
+
+                    <span id="attachmentLabel" class="text-sm text-slate-400 truncate">
+                        Tap to choose or take a photo
+                    </span>
+
+                    <span class="ml-auto text-xs text-slate-400">Max 5 MB</span>
+                </label>
+
+                <input id="attachment" name="Attachment" type="file" accept="image/*" capture="environment" class="input-hidden" />
+                <span asp-validation-for="Attachment" class="text-red-600 text-xs mt-1"></span>
+
+                <div id="previewWrap" class="mt-2 hidden">
+                    <img id="previewImg" alt="Preview"
+                         class="max-h-48 rounded-lg border border-slate-200 object-contain w-full" />
+                </div>
+
+                <span class="text-[10px] text-slate-500 mt-1">Supported: JPG, PNG, WEBP</span>
+            </div>
+            
             <button id="sendBtn" type="submit"
-                    class="w-full rounded-lg bg-sky-600 px-4 py-2.5 text-white font-medium active:scale-[0.99] hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    class="w-full rounded-lg bg-sky-600 px-4 py-2.5 mt-8 text-white font-medium active:scale-[0.99] hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
                 Send
             </button>
         </form>
@@ -130,7 +158,7 @@
     
     
     
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             const ta = document.querySelector('textarea[name="Message"]');
             const counter = document.getElementById('msgCounter');
@@ -192,4 +220,42 @@
             });
         });
     </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const fileInput = document.getElementById('attachment');
+          const label = document.getElementById('attachmentLabel');
+          const previewWrap = document.getElementById('previewWrap');
+          const previewImg = document.getElementById('previewImg');
+        
+          if (!fileInput) return;
+        
+          fileInput.addEventListener('change', () => {
+            const f = fileInput.files && fileInput.files[0];
+            if (!f) {
+              label.textContent = 'Tap to choose or take a photo';
+              previewWrap?.classList.add('hidden');
+              previewImg?.removeAttribute('src');
+              return;
+            }
+            label.textContent = f.name;
+        
+            if (f.type.startsWith('image/')) {
+              const url = URL.createObjectURL(f);
+              if (previewImg) previewImg.src = url;
+              previewWrap?.classList.remove('hidden');
+            } else {
+              previewWrap?.classList.add('hidden');
+              previewImg?.removeAttribute('src');
+            }
+          }, { passive: true });
+        });
+    </script>
+    
+    <style>
+        .input-hidden{
+          position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+          clip:rect(0,0,0,0);white-space:nowrap;border:0;
+        }
+    </style>
 }

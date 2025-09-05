@@ -27,4 +27,19 @@ public sealed class SignalSender : ISignalSender
         using var res = await _http.PostAsJsonAsync("v2/send", payload, ct);
         res.EnsureSuccessStatusCode();
     }
+    
+    
+    public async Task SendAsync(string[] to, string text, IEnumerable<string>? base64Attachments = null, CancellationToken ct = default)
+    {
+        var payload = new
+        {
+            message = text,
+            number = _cfg.SendMessageFrom,
+            recipients = to,
+            base64_attachments = base64Attachments
+        };
+
+        using var res = await _http.PostAsJsonAsync("v2/send", payload, ct);
+        res.EnsureSuccessStatusCode();
+    }
 }
