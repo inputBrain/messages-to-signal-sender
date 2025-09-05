@@ -57,13 +57,16 @@ public class MessageController : Controller
         
         _logger.LogInformation("Message saved in the DataBase | Message: {id}, {Message}", message.Id, message.Message);
 
-        var text = $"-=| WEBSITE MESSAGE |=-\n\nName:\n{message.Username}\n\nMessage:\n\n{message.Message}";
+        var text = "⚠️ NOTIFICATION ⚠️️\n\n" +
+                   $"👤 {message.Username}\n" +
+                   "---------------------------------\n\n" +
+                   $"💬\n\n{message.Message}\n" +
+                   "---------------------------------";
 
         try
         {
             IEnumerable<string>? attachments = base64 is not null ? new[] { base64 } : null;
-            await _signal.SendTextAsync(_signalSettings.SendMessageTo, text, cancellationToken);
-            // await _signal.SendAsync(_signalSettings.SendMessageTo, text, attachments, cancellationToken);
+            await _signal.SendAsync(_signalSettings.SendMessageTo, text, attachments, cancellationToken);
         }
         catch (Exception ex)
         {
