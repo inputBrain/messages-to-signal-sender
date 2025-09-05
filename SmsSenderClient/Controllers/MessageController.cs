@@ -34,8 +34,12 @@ public class MessageController : Controller
         var message = await _messageRepository.CreateModel(vm.Name ?? "", vm.Message, DateTimeOffset.UtcNow);
         
         _logger.LogInformation("Message saved in the DataBase | Message: {id}, {Message}", message.Id, message.Message);
-        
-        var text = $"-=WEBSITE MESSAGE=-\n\nName: {message.Username}\n\nMessage:\n{message.Message}";
+
+        var text = "⚠️ NOTIFICATION ⚠️️\n\n" +
+                   $"👤 {message.Username}\n" +
+                   "---------------------------------\n\n" +
+                   $"💬\n\n{message.Message}\n" +
+                   "---------------------------------";
         try
         {
             await _signal.SendTextAsync(_signalSettings.SendMessageTo, text, cancellationToken);
