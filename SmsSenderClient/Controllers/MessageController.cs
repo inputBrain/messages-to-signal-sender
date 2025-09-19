@@ -57,7 +57,7 @@ public class MessageController : Controller
         
         _logger.LogInformation("Message saved in the DataBase | Message: {id}, {Message}", message.Id, message.Message);
 
-        var text = "⚠️ Повідомлення ⚠️️\n\n" +
+        var text = "Повідомлення ️\n\n" +
                    $"{message.Username}\n" +
                    $"\n\n{message.Message}\n";
 
