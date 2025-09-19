@@ -19,7 +19,7 @@
 
             <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm"></div>
 
-            <div class="flex flex-col">
+            <div class="pb-4 flex flex-col">
                 <label asp-for="Name" class="mb-1 text-sm font-medium">Ваше ім'я <span class="text-red-500">*</span></label>
                 <input asp-for="Name"
                        type="text"
@@ -28,6 +28,38 @@
                        placeholder="Введіть ваше ім'я" />
                 <span asp-validation-for="Name" class="text-red-600 text-xs mt-1"></span>
             </div>
+            
+            <section class="rounded-lg border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
+                <div class="flex items-start gap-3">
+                    <div class="shrink-0 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             fill="currentColor"
+                             viewBox="0 0 24 24"
+                             class="h-5 w-5 sm:h-6 sm:w-6 text-sky-600"
+                             aria-hidden="true">
+                            <path fill-rule="evenodd" 
+                                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.75 6a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 10.5a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Z" 
+                                  clip-rule="evenodd" />
+                        </svg>
+                        
+                    </div>
+                    <div class="text-sm leading-relaxed text-slate-900">
+                        <p class="font-medium mb-1">Доброго дня, шановні захисник та захисниця!</p>
+                        <p>
+                            Будь ласка, напишіть у формі нижче, з якими проблемами ви стикаєтесь під час лікування та реабілітації
+                            в нашому закладі, щоб ми могли покращити нашу роботу задля вас.
+                        </p>
+                        <p class="mt-2">
+                            Зверніть увагу, що ваше звернення є конфіденційним. Воно буде розглянуте винятково керівництвом
+                            та відповідними посадовими особами госпіталю, які допоможуть вам вирішити наявні проблемні питання.
+                        </p>
+                        <p class="mt-2 italic">
+                            Ваша думка, спокій та комфорт є надзвичайно важливими для нас!
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
 
             <div class="flex flex-col">
                 <label asp-for="Message" class="mb-1 text-sm font-medium">Повідомлення <span class="text-red-500">*</span></label>
