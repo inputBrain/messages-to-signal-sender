@@ -38,13 +38,13 @@ public class MessageController : Controller
         {
             if (vm.Attachment.Length > MAX_SIZE)
             {
-                ModelState.AddModelError("Attachment", "The file exceeds the 5 MB limit.");
+                ModelState.AddModelError("Attachment", "Файл перевищує обмеження у 5 МБ.");
                 return View("~/Views/Home/Index.cshtml", vm);
             }
 
             if (string.IsNullOrWhiteSpace(vm.Attachment.ContentType) || !vm.Attachment.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
             {
-                ModelState.AddModelError("Attachment", "Only image files are allowed.");
+                ModelState.AddModelError("Attachment", "Дозволені лише файли зображень.");
                 return View("~/Views/Home/Index.cshtml", vm);
             }
 
@@ -71,7 +71,7 @@ public class MessageController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "Signal send failed");
-            ModelState.AddModelError("", "Failed to send via Signal. Please try again later.");
+            ModelState.AddModelError("", "Не вдалося надіслати через Signal. Спробуйте пізніше.");
             return View("~/Views/Home/Index.cshtml", vm);
         }
         

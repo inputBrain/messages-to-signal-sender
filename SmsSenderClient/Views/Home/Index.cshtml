@@ -6,7 +6,7 @@
 
 <div class="min-h-screen flex items-center justify-center bg-slate-50 px-4 pb-12">
     <div class="w-full max-w-md">
-        <h1 class="text-2xl font-semibold tracking-tight mb-4 text-center">Send us a message</h1>
+        <h1 class="text-2xl font-semibold tracking-tight mb-4 text-center">Надішліть нам повідомлення</h1>
 
         <form id="sendForm"
               asp-controller="Message"
@@ -20,22 +20,22 @@
             <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm"></div>
 
             <div class="flex flex-col">
-                <label asp-for="Name" class="mb-1 text-sm font-medium">Your name (optional)</label>
+                <label asp-for="Name" class="mb-1 text-sm font-medium">Ваше ім'я <span class="text-red-500">*</span></label>
                 <input asp-for="Name"
                        type="text"
                        autocomplete="name"
                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                       placeholder="Your name" />
+                       placeholder="Введіть ваше ім'я" />
                 <span asp-validation-for="Name" class="text-red-600 text-xs mt-1"></span>
             </div>
 
             <div class="flex flex-col">
-                <label asp-for="Message" class="mb-1 text-sm font-medium">Message <span class="text-red-500">*</span></label>
+                <label asp-for="Message" class="mb-1 text-sm font-medium">Повідомлення <span class="text-red-500">*</span></label>
                 <textarea asp-for="Message"
                           rows="6"
                           maxlength="500"
                           class="w-full resize-y rounded-lg border border-slate-300 px-3 py-2 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                          placeholder="Type your message…"></textarea>
+                          placeholder="Введіть ваше повідомлення"></textarea>
                 <div class="flex items-center justify-between mt-1">
                     <span asp-validation-for="Message" class="text-red-600 text-xs"></span>
                     <span id="msgCounter" class="text-xs text-slate-500">0 / 500</span>
@@ -43,7 +43,7 @@
             </div>
             
             <div class="flex flex-col">
-                <label class="mb-1 text-sm font-medium">Attach a photo (optional)</label>
+                <label class="mb-1 text-sm font-medium">Додати фото (необов'язково)</label>
 
                 <label for="attachment"
                        class="flex items-center justify-between gap-2 rounded-lg border border-dashed border-slate-300 px-3 py-2 cursor-pointer hover:bg-slate-50">
@@ -52,10 +52,10 @@
                     </svg>
 
                     <span id="attachmentLabel" class="text-sm text-slate-400 truncate">
-                        Tap to choose or take a photo
+                        Натисніть, щоб вибрати або зробити фото
                     </span>
 
-                    <span class="ml-auto text-xs text-slate-400">Max 5 MB</span>
+                    <span class="ml-auto text-xs text-slate-400">Макс. 5 МБ</span>
                 </label>
 
                 <input id="attachment" name="Attachment" type="file" accept="image/*" capture="environment" class="input-hidden" />
@@ -66,12 +66,12 @@
                          class="max-h-48 rounded-lg border border-slate-200 object-contain w-full" />
                 </div>
 
-                <span class="text-[10px] text-slate-500 mt-1">Supported: JPG, PNG, WEBP</span>
+                <span class="text-[10px] text-slate-500 mt-1">Підтримуються: JPG, PNG, WEBP</span>
             </div>
             
             <button id="sendBtn" type="submit"
                     class="w-full rounded-lg bg-sky-600 px-4 py-2.5 mt-8 text-white font-medium active:scale-[0.99] hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                Send
+                Надіслати
             </button>
         </form>
     </div>
@@ -102,10 +102,10 @@
 
                 <div class="flex-1">
                     <h2 id="sentTitle" class="text-base font-semibold">
-                        Message sent successfully
+                        Повідомлення успішно надіслано
                     </h2>
                     <p class="mt-1 text-sm text-slate-600">
-                        Thank you! We’ll get back to you soon.
+                        Дякуємо! Ми зв'яжемося з вами найближчим часом.
                     </p>
                 </div>
 
@@ -174,7 +174,7 @@
             if (!form || !btn) return;
 
             const baseLabel = btn.textContent.trim();
-            const frames = ["Sending", "Sending .", "Sending . .", "Sending . . ."];
+            const frames = ["Надсилання", "Надсилання .", "Надсилання . .", "Надсилання . . ."];
             let i = 0, timer = null, locked = false;
 
             function startLoading() {
@@ -233,7 +233,7 @@
           fileInput.addEventListener('change', () => {
             const f = fileInput.files && fileInput.files[0];
             if (!f) {
-              label.textContent = 'Tap to choose or take a photo';
+              label.textContent = 'Натисніть, щоб вибрати або зробити фото';
               previewWrap?.classList.add('hidden');
               previewImg?.removeAttribute('src');
               return;
