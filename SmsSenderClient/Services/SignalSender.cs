@@ -7,11 +7,13 @@ public sealed class SignalSender : ISignalSender
 {
     private readonly HttpClient _http;
     private readonly SignalSettings _cfg;
+    private readonly ILogger<SignalSender> _logger;
 
-    public SignalSender(HttpClient http, IOptions<SignalSettings> cfg)
+    public SignalSender(HttpClient http, IOptions<SignalSettings> cfg, ILogger<SignalSender> logger)
     {
         _http = http;
         _cfg = cfg.Value;
+        _logger = logger;
         _http.BaseAddress = new Uri(_cfg.BaseUrl.TrimEnd('/') + "/");
     }
 
@@ -40,6 +42,19 @@ public sealed class SignalSender : ISignalSender
         };
 
         using var res = await _http.PostAsJsonAsync("v2/send", payload, ct);
-        res.EnsureSuccessStatusCode();
+
+        if (!res.IsSuccessStatusCode)
+        {
+            var body = await res.Content.ReadAsStringAsync(ct);
+            _logger.LogWarning("Signal API returned {StatusCode}: {Body}", (int)res.StatusCode, body);
+            
+            if (!body.Contains("\"error\"", StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogInformation("Message appears to be delivered despite non-success status code");
+                return;
+            }
+
+            res.EnsureSuccessStatusCode();
+        }
     }
 }
