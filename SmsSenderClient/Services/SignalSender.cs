@@ -48,9 +48,9 @@ public sealed class SignalSender : ISignalSender
             var body = await res.Content.ReadAsStringAsync(ct);
             _logger.LogWarning("Signal API returned {StatusCode}: {Body}", (int)res.StatusCode, body);
             
-            if (!body.Contains("\"error\"", StringComparison.OrdinalIgnoreCase))
+            if (res.StatusCode == System.Net.HttpStatusCode.BadRequest && body.Contains("Unregistered user", StringComparison.OrdinalIgnoreCase))
             {
-                _logger.LogInformation("Message appears to be delivered despite non-success status code");
+                _logger.LogInformation("Message delivered to registered users, some recipients unregistered");
                 return;
             }
 

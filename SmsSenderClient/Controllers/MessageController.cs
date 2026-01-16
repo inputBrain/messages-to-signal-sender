@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using SmsSenderClient.Configs;
 using SmsSenderClient.Database.Message;
+using SmsSenderClient.Helpers;
 using SmsSenderClient.Models;
 using SmsSenderClient.Services;
 
@@ -30,7 +31,7 @@ public class MessageController : Controller
     {
         _logger.LogInformation("Sending message");
         _logger.LogInformation("Name: {VmName} | Message: {VmMessage}", vm.Name, vm.Message);
-        
+    
         const long MAX_SIZE = 5 * 1024 * 1024;
         string? base64 = null;
 
@@ -42,9 +43,10 @@ public class MessageController : Controller
                 return View("~/Views/Home/Index.cshtml", vm);
             }
 
-            if (string.IsNullOrWhiteSpace(vm.Attachment.ContentType) || !vm.Attachment.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            var (isValid, error) = FileValidationHelper.ValidateImageFile(vm.Attachment);
+            if (!isValid)
             {
-                ModelState.AddModelError("Attachment", "Дозволені лише файли зображень.");
+                ModelState.AddModelError("Attachment", error ?? "Недійсний файл.");
                 return View("~/Views/Home/Index.cshtml", vm);
             }
 
@@ -52,10 +54,8 @@ public class MessageController : Controller
             await vm.Attachment.CopyToAsync(ms, cancellationToken);
             base64 = Convert.ToBase64String(ms.ToArray());
         }
-        
+    
         var message = await _messageRepository.CreateModel(vm.Name ?? "", vm.Message, DateTimeOffset.UtcNow);
-        
-        _logger.LogInformation("Message saved in the DataBase | Message: {id}, {Message}", message.Id, message.Message);
 
         var text = "Повідомлення ️\n\n" +
                    $"{message.Username}\n" +
@@ -72,9 +72,9 @@ public class MessageController : Controller
             ModelState.AddModelError("", "Не вдалося надіслати через Signal. Спробуйте пізніше.");
             return View("~/Views/Home/Index.cshtml", vm);
         }
-        
+
         TempData["MessageSent"] = true;
-        
+
         return RedirectToAction("Index", "Home");
     }
 }

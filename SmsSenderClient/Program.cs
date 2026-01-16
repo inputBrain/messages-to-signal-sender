@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SmsSenderClient.Configs;
 using SmsSenderClient.Database;
 using SmsSenderClient.Database.Message;
+using SmsSenderClient.Middleware;
 using SmsSenderClient.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseRateLimiting();
 
 app.UseAuthorization();
 
